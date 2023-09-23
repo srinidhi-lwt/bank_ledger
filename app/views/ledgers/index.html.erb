@@ -1,5 +1,24 @@
-<div>
-	<% @transactions.each  do |txn| %>
-	  <div><%= txn %></div>
-	<% end %>
-</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Dates</th>
+      <th scope="col">Narration</th>
+      <th scope="col">Reference No.</th>
+      <th scope="col">Withdrawal Amount</th>
+      <th scope="col">Deposit Amount</th>
+      <th scope="col">Balance</th>
+    </tr>
+  </thead>
+  <tbody>
+  	<% @transactions.each do |transaction| %>
+  	  <tr>
+  	    <td><%= transaction['date'].to_datetime.strftime('%Y-%m-%d %I:%M %p') %></td>
+  	    <td><%= transaction.dig('destination', 'description') %></td>
+  	    <td><%= transaction.dig('source', 'id') %></td>
+  	    <td><%= transaction['amount'] < 0 ? transaction['amount']: '' %></td>
+  	    <td><%= transaction['amount'] > 0 ? transaction['amount']: '' %></td>
+  	    <td><%= transaction['balance'] %></td>
+  	  </tr>
+  	<% end %>
+  </tbody>
+</table>
