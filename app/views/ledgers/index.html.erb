@@ -1,24 +1,57 @@
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Dates</th>
-      <th scope="col">Narration</th>
-      <th scope="col">Reference No.</th>
-      <th scope="col">Withdrawal Amount</th>
-      <th scope="col">Deposit Amount</th>
-      <th scope="col">Balance</th>
-    </tr>
-  </thead>
-  <tbody>
-  	<% @transactions.each do |transaction| %>
-  	  <tr>
-  	    <td><%= transaction['date'].to_datetime.strftime('%Y-%m-%d %I:%M %p') %></td>
-  	    <td><%= transaction.dig('destination', 'description') %></td>
-  	    <td><%= transaction.dig('source', 'id') %></td>
-  	    <td><%= transaction['amount'] < 0 ? transaction['amount']: '' %></td>
-  	    <td><%= transaction['amount'] > 0 ? transaction['amount']: '' %></td>
-  	    <td><%= transaction['balance'] %></td>
-  	  </tr>
-  	<% end %>
-  </tbody>
-</table>
+<div class="container">
+	<div class="well">
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-5">
+				<p>Account Holder Name: Srinidhi G S</p>
+				<p>Account Number: XXXXXXXXX1234</p>
+				<p>Branch: Kasturbha Marg Road</p>
+				<p>IFSC Code: HDFC0000000</p>
+			</div>
+			<div class="col-md-5">
+				<p>Branch Address: 24/3 HDFC house, NO. 51 Kasturbha road</p>
+				<p>Currency: USD ($)</p>
+				<p>Phone: +91-8296757651</p>
+				<p>Cust ID: 721000000</p>
+			</div>
+			<div class="col-md-2"></div>
+		</div>
+	</div>
+
+	<div class="well">
+
+		<table class="table">
+		  <thead>
+		    <tr>
+		      <th scope="col">Dates</th>
+		      <th scope="col">Narration</th>
+		      <th scope="col">Reference No.</th>
+		      <th scope="col">Withdrawal Amount (in $)</th>
+		      <th scope="col">Deposit Amount (in $)</th>
+		      <th scope="col">Balance (in $)</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  	<% @transactions.each do |transaction| %>
+		  	  <tr>
+		  	    <td>
+		  	      <%= transaction['date'].to_datetime.strftime('%b') + ' ' +
+		  	          transaction['date'].to_datetime.day.ordinalize + ' ' +
+		  	          transaction['date'].to_datetime.strftime('%Y %I:%M %p') %>
+		  	    </td>
+
+		  	    <td><%= transaction.dig('source', 'type') %>
+		  	    	<%= transaction.dig('source', 'description') %> - 
+		  	    	<%= transaction.dig('destination', 'type') %>
+		  	    	<%= transaction.dig('destination', 'description') %>
+		  	    </td>
+		  	    <td><%= transaction.dig('source', 'id') %></td>
+		  	    <td><%= transaction['amount'] < 0 ? transaction['amount'].abs : '' %></td>
+		  	    <td><%= transaction['amount'] > 0 ? transaction['amount']: '' %></td>
+		  	    <td><%= transaction['balance'] %></td>
+		  	  </tr>
+		  	<% end %>
+		  </tbody>
+		</table>
+	</div>
+</div>
