@@ -1,57 +1,75 @@
-<div class="container">
-	<div class="well">
-		<div class="row">
-			<div class="col-md-2"></div>
-			<div class="col-md-5">
-				<p>Account Holder Name: Srinidhi G S</p>
-				<p>Account Number: XXXXXXXXX1234</p>
-				<p>Branch: Kasturbha Marg Road</p>
-				<p>IFSC Code: HDFC0000000</p>
-			</div>
-			<div class="col-md-5">
-				<p>Branch Address: 24/3 HDFC house, NO. 51 Kasturbha road</p>
-				<p>Currency: USD ($)</p>
-				<p>Phone: +91-8296757651</p>
-				<p>Cust ID: 721000000</p>
-			</div>
-			<div class="col-md-2"></div>
-		</div>
-	</div>
+<div class="container mt-20">
+  <div class="well">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-5">
+        <p>Account Holder Name: Srinidhi G S</p>
+        <p>Account Number: XXXXXXXXX1234</p>
+        <p>Branch: Kasturbha Marg Road</p>
+        <p>IFSC Code: HDFC0000000</p>
+      </div>
+      <div class="col-md-5">
+        <p>Branch Address: 24/3 HDFC house, NO. 51 Kasturbha road</p>
+        <p>Currency: USD ($)</p>
+        <p>Phone: +91-8296757651</p>
+        <p>Cust ID: 721000000</p>
+      </div>
+      <div class="col-md-2">
+      </div>
+    </div>
+  </div>
 
-	<div class="well">
+  <ul class="nav nav-tabs">
+    <% ledger_types.each do |ledger_type| %>
+      <li class="nav-item <%= 'active' if (params[:type].blank? && ledger_type == 'simple') || (params[:type] == ledger_type) %>">
+        <a class="nav-link" aria-current="page" href="<%= ledgers_path(type: ledger_type) %>"><%= ledger_type.capitalize %> ledger</a>
+      </li>
+    <% end %>
+  </ul>
 
-		<table class="table">
-		  <thead>
-		    <tr>
-		      <th scope="col">Dates</th>
-		      <th scope="col">Narration</th>
-		      <th scope="col">Reference No.</th>
-		      <th scope="col">Withdrawal Amount (in $)</th>
-		      <th scope="col">Deposit Amount (in $)</th>
-		      <th scope="col">Balance (in $)</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		  	<% @transactions.each do |transaction| %>
-		  	  <tr>
-		  	    <td>
-		  	      <%= transaction['date'].to_datetime.strftime('%b') + ' ' +
-		  	          transaction['date'].to_datetime.day.ordinalize + ' ' +
-		  	          transaction['date'].to_datetime.strftime('%Y %I:%M %p') %>
-		  	    </td>
+  <div class="well">
+    <div class="row">
+      <div class="col-md-6">
+        Statement from <%= transaction_date_range %>
+      </div>
+      <div class="col-md-6">
+        Current balance: $ <%= @current_balance %>
+      </div>
+    </div>
+    
+  </div>
 
-		  	    <td><%= transaction.dig('source', 'type') %>
-		  	    	<%= transaction.dig('source', 'description') %> - 
-		  	    	<%= transaction.dig('destination', 'type') %>
-		  	    	<%= transaction.dig('destination', 'description') %>
-		  	    </td>
-		  	    <td><%= transaction.dig('source', 'id') %></td>
-		  	    <td><%= transaction['amount'] < 0 ? transaction['amount'].abs : '' %></td>
-		  	    <td><%= transaction['amount'] > 0 ? transaction['amount']: '' %></td>
-		  	    <td><%= transaction['balance'] %></td>
-		  	  </tr>
-		  	<% end %>
-		  </tbody>
-		</table>
-	</div>
+  <div class="well">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Transaction Date & time (IST)</th>
+          <th scope="col">Narration</th>
+          <th scope="col">Reference No.</th>
+          <th scope="col">Withdrawal Amount (in $)</th>
+          <th scope="col">Deposit Amount (in $)</th>
+          <th scope="col">Balance (in $)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @transactions.each do |transaction| %>
+          <tr>
+            <td>
+             <%= datetime_in_ist(transaction) %>
+            </td>
+
+            <td><%= transaction.dig('source', 'type') %>
+              <%= transaction.dig('source', 'description') %> - 
+              <%= transaction.dig('destination', 'type') %>
+              <%= transaction.dig('destination', 'description') %>
+            </td>
+            <td><%= transaction.dig('source', 'id') %></td>
+            <td><%= transaction['amount'] < 0 ? transaction['amount'].abs : '' %></td>
+            <td><%= transaction['amount'] > 0 ? transaction['amount']: '' %></td>
+            <td><%= transaction['balance'] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
